@@ -22,3 +22,6 @@ void C_Label::Create(Win_Frame* pFrame, std::string Text, int x, int y, int anch
 	}
 }
 
+void C_Label::Set_BackColor(COLORREF Color){
+	C_Objeto::BackColor = Color;
+}

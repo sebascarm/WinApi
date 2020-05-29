@@ -80,16 +80,18 @@ void Contenedor::Show() {
 	}
 }
 
-// GET ID (Solo Frame lo usa)									
+// GET hWnd (Solo Frame lo usa)									
 HWND Contenedor::Get_hWnd() {
 	switch (Tipo) {
 	case TipoObjeto::T_FRAME:
 		return pFrame->hWnd;
 		break;
+	case TipoObjeto::T_LABEL:
+		return pLabel->hWnd;
+		break;
 	default:
 		return 0;
 	}
-
 }
 
 //Cambiar color (para label tranparente)						
@@ -149,6 +151,9 @@ int Contenedor::Get_ID() {
 		break;
 	case TipoObjeto::T_LISTBOX:
 		return pListBox->ID;
+		break;
+	case TipoObjeto::T_LABEL:
+		return pLabel->ID;
 		break;
 	default:
 		return 0;

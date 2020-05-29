@@ -98,14 +98,15 @@ void C_Objeto::Draw() {
 		(HMENU)(UINT_PTR)ID,		/* Identificador del control */
 		NULL,						/* hInstance,	/* Instancia */
 		NULL);						/* Sin datos de creación de ventana */
-
-	SendMessage(hWnd, WM_SETFONT, (WPARAM)hFont, MAKELPARAM(TRUE, 0));
+	//SendMessage(hWnd, WM_SETFONT, (WPARAM)hFont, MAKELPARAM(TRUE, 0));
+	Set_Font(Fuente);
 }
 
 // Fuente		
 void C_Objeto::Set_Font(string Fuente) {
+	this->Fuente = Fuente;
 	hFont = CreateFont(
-		14,						// Alto
+		this->Text_Size,		// Alto
 		0,						// Ancho promedio
 		0,						// Angulo de escapement
 		0,						// Linea base de angulo de orientacion
@@ -119,17 +120,17 @@ void C_Objeto::Set_Font(string Fuente) {
 		CLEARTYPE_QUALITY,		// Output quality
 		DEFAULT_PITCH,			// pitch and family
 		TEXT(Fuente.c_str()));	// Fuente
-
+	
 	SendMessage(hWnd, WM_SETFONT, (WPARAM)hFont, MAKELPARAM(TRUE, 0));
 }
 
 //Color de fondo
 HBRUSH C_Objeto::ColorEdit(WPARAM& wParam) {
 	//Fondo del texto
-	static HBRUSH pincel;
-	pincel = CreateSolidBrush(RGB(250, 250, 250));	// Es un color especifico, se debe modificar por el que queremos usar
-	SetBkColor((HDC)wParam, RGB(250, 250, 250));	// Es un color especifico, se debe modificar por el que queremos usar
-	return pincel;
+	HDC hdcStatic = (HDC)wParam; // or obtain the static handle in some other way
+	//SetTextColor(hdcStatic, RGB(255, 0, 0)); // text color
+	SetBkColor(hdcStatic, BackColor);
+	return (HBRUSH)GetStockObject(NULL_BRUSH);
 
 }
 
@@ -137,6 +138,12 @@ HBRUSH C_Objeto::ColorEdit(WPARAM& wParam) {
 //*********************************************
 //*** PROPIEDADES COMUNES					***
 //*********************************************
+
+// No expuesto
+HWND* C_Objeto::Get_hWnd_Padre(){
+	return this->hWnd_Padre;
+}
+
 std::string C_Objeto::Get_Text() {
 	string Resul;
 	int len = GetWindowTextLength(hWnd) + 1;
@@ -159,6 +166,9 @@ void C_Objeto::Set_Text(string Text) {
 	SetWindowText(hWnd, (LPCSTR)Text.c_str());
 }
 
+void C_Objeto::Set_Text_Size(int Text_Size){
+	this->Text_Size = Text_Size;
+}
 void C_Objeto::Set_Pos(int x, int y, int ancho, int alto) {
 	if (x == -1) { x = Get_Pos_X(); }
 	if (y == -1) { y = Get_Pos_Y(); }

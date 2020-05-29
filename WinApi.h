@@ -72,9 +72,11 @@ public:
 	virtual int		Get_Pos_X() = 0;
 	virtual int		Get_Pos_Y() = 0;
 	virtual void	Set_Text(string Text) = 0;
+	virtual void	Set_Text_Size(int Text_Size) = 0;
 	virtual void	Set_Pos(int x = -1, int y = -1, int ancho = -1, int alto = -1) = 0;
 	virtual void	Set_Enable() = 0;
 	virtual void	Set_Disable() = 0;
+	virtual void	Set_BackColor(COLORREF Color)= 0;
 };
 // GROUPBOX			
 class Win_GroupBox {

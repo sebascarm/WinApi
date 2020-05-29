@@ -1,8 +1,9 @@
 //######################################################//
-// Shape v1.0											//
+// Shape v1.1											//
 //######################################################//
 // ULTIMA MODIFICACION DOCUMENTADA                      //
 // 28/05/2020                                           //
+// Fix Varios graficos									//
 // Creacion                                             //
 //######################################################//
 
@@ -20,6 +21,7 @@ private:
 	COLORREF Color =  RGB(0, 0, 0) ;
 	COLORREF BackColor = RGB(255,0,0);
 	POINT Poligono[5] = { 0,0,0,0,0,0,0,0,0,0 };	// Para poligonos
+
 public:
 	void Create(Win_Frame* pFrame, S_Style Style, int x, int y, int ancho, int alto);
 	// Propiedades	
@@ -37,6 +39,6 @@ public:
 	void	Set_BackColor(COLORREF Color);
 	void	Set_FreePoints(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, int x5, int y5);
 	// Evento		(Llamado automatico al dibujar)
-	void	Draw_Shape();
+	void	Draw_Shape(HDC hdc);
 };
 

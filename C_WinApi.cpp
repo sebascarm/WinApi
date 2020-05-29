@@ -87,10 +87,14 @@ LRESULT CALLBACK C_WinApi::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 	//static WindowsMessageMap mm;							
 	//OutputDebugString(mm(msg, lParam, wParam).c_str());	
 	
-	int ID = LOWORD(wParam);			// Identificador del controlr
+	int ID			 = LOWORD(wParam);				// Identificador del control		
+	int ID_Long		 = GetDlgCtrlID((HWND)lParam);  // Identificador en cambio de color	
 	int Notificacion = HIWORD(wParam);	// Codigo de notificacion recibida (ej: click, doble click)
-	int Elementos = (int)CONTENEDOR.size();
+	int Elementos    = (int)CONTENEDOR.size();
 	
+	HDC hdc = NULL;
+	PAINTSTRUCT PStruc;
+
 	switch (msg) {
 	//	Crear controles		//								
 	case WM_CREATE:
@@ -98,11 +102,29 @@ LRESULT CALLBACK C_WinApi::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 	// DIBUJADO DE ELEMENTOS								
 	case WM_PAINT:
 		for (int i = 0; i < Elementos; i++) {
-			// **** Envio de dibujo a shape					
-			if (CONTENEDOR[i].Tipo == TipoObjeto::T_SHAPE) {
-				// Buscamos el shape que recibe el evento	
-				if (CONTENEDOR[i].Get_ID() == ID)
-					CONTENEDOR[i].pShape->Draw_Shape();			// Enviamos el evento 
+			// Buscamos el frame donde dibuja				
+			if (CONTENEDOR[i].Tipo == TipoObjeto::T_FRAME) {
+				bool inicial = true;
+				HWND*	hPadreElem;
+				// REcorremos los elementos del frame		
+				for (int j = 0; j < Elementos; j++) {
+					if (CONTENEDOR[j].Tipo == TipoObjeto::T_SHAPE) {
+						hPadreElem = CONTENEDOR[j].pShape->Get_hWnd_Padre();
+						if (hWnd == *hPadreElem) {
+							// Iniciar pintado	
+							if (inicial) {
+								hdc = BeginPaint(hWnd, &PStruc);
+								inicial = false;
+							}
+							// Dibujar			
+							CONTENEDOR[j].pShape->Draw_Shape(hdc);			// Enviamos el evento 	
+						}
+					}
+				}
+				// Fin de pintado				
+				if (!inicial) {
+					EndPaint(hWnd, &PStruc);
+				}
 			}
 		}
 		break;
@@ -113,7 +135,9 @@ LRESULT CALLBACK C_WinApi::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 	case WM_CTLCOLORSTATIC: {
 		for (int i = 0; i < Elementos; i++) {
 			if (CONTENEDOR[i].Tipo == TipoObjeto::T_LABEL) {
-				return (LRESULT)CONTENEDOR[i].ColorEdit(wParam); // devuelve el pincel modificado
+				if (CONTENEDOR[i].Get_ID() == ID_Long) {
+					return (LRESULT)CONTENEDOR[i].ColorEdit(wParam); // devuelve el pincel modificado
+				}
 			}
 		}
 		break;

@@ -28,11 +28,8 @@ void C_Shape::Set_FreePoints(int x1, int y1, int x2, int y2, int x3, int y3, int
 //*** EVENTO CLICK (El loop debe llamarlo)	***
 //*** No se activa solo						***
 //*********************************************
-void C_Shape::Draw_Shape() {
-    PAINTSTRUCT PStruc;
-
-    HDC hdc = BeginPaint(*hWnd_Padre, &PStruc);
-
+void C_Shape::Draw_Shape(HDC hdc) {
+    
     HGDIOBJ hPen = CreatePen(PS_SOLID, 1, this->Color);
     HGDIOBJ hBrush = CreateSolidBrush(this->BackColor);
 
@@ -60,5 +57,6 @@ void C_Shape::Draw_Shape() {
     DeleteObject(holdPen);
     DeleteObject(holdBrush);
     
-    EndPaint(*hWnd_Padre, &PStruc);
 }
+
+

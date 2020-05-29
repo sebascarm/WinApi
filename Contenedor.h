@@ -35,8 +35,9 @@ public:
 	//envios
 	void	Draw();		// Dibujo (para todos los elementos							
 	void	Show();		// Show (para frame)										
-	HWND	Get_hWnd(); //Get hWnd (para frame)
-	int		Get_ID();	// Get ID de los elementos (solo botones por el momento)	
+	HWND	Get_hWnd(); //Get hWnd (para frame)										
+	int		Get_ID();	// Get ID de los elementos (solo botones y label por el momento)	
+
 	
 	HBRUSH ColorEdit(WPARAM wParam);	//Edicion de color (para label transparente) - devuelve el pincel modificado
 	

@@ -1,8 +1,9 @@
 //######################################################//
-// OBJETO GLOBAL v2.1									//
+// OBJETO GLOBAL v2.2									//
 //######################################################//
 // ULTIMA MODIFICACION DOCUMENTADA                      //
-// 15/03/2020                                           //
+// 29/05/2020                                           //
+// Text Size & BackColor								//
 // Habilitar y deshabilitar objetos						//
 // SetFont												//
 // Creacion                                             //
@@ -27,6 +28,10 @@ protected:
 	std::string Tipo;
 	DWORD		Estilo;
 	HFONT		hFont = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
+	string		Fuente		= "Arial";
+	int			Text_Size	= 14;
+	COLORREF	BackColor   = RGB(250, 250, 250);
+
 	// Funcion para los objetos
 	void Contener(C_Button& Button);
 	void Contener(C_Label& Label);
@@ -48,12 +53,15 @@ protected:
 
 public:
 	void Create(Win_Frame* pFrame, std::string Text, int x, int y, int ancho, int alto);
+	//Propiedades comunes no expuestas
+	HWND*   Get_hWnd_Padre();
 	// Propiedades comunues	
 	string	Get_Text();
 	int		Get_Pos_X();
 	int		Get_Pos_Y();
 	// Metodos comunes		
 	void Set_Text(string Text);
+	void Set_Text_Size(int Text_Size);
 	void Set_Pos(int x, int y, int ancho, int alto);
 	void Set_Font(string Fuente);
 	void Set_Enable();
