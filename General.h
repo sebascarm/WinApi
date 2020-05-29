@@ -32,7 +32,8 @@ enum class S_Align {
 enum class S_Style {
 	S_LINE,
 	S_RECTANGLE,
-	S_CIRCLE
+	S_CIRCLE,
+	S_FREE
 };
 
 

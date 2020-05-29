@@ -18,15 +18,15 @@
 class C_Objeto {
 protected:
 	int	 ID			 = NULL;
-	unsigned __int64 Elemento;	// Numero de elemento - distinto al ID
+	unsigned __int64 Elemento;				// Numero de elemento - distinto al ID
 	HWND hWnd		 = nullptr;
 	HWND *hWnd_Padre = nullptr;
-	int	 x = 0, y = 0, ancho = 0, alto = 0;
+	int	 x = 0, y = 0, ancho = 0, alto = 0;	// Posicion
 	std::string	Texto;
 	// Detalles del objeto
 	std::string Tipo;
-	DWORD Estilo;
-	HFONT hFont = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
+	DWORD		Estilo;
+	HFONT		hFont = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
 	// Funcion para los objetos
 	void Contener(C_Button& Button);
 	void Contener(C_Label& Label);
@@ -37,11 +37,11 @@ protected:
 	void Contener(C_ListBox& ListBox);
 	void Contener(C_RichText& Objeto);
 	void Contener(C_Shape& Objeto);
-	//lo llama el contenedor
+	//lo llama el contenedor		
 	void Draw();
-	// Funcion vacia para callback
+	// Funcion vacia para callback	
 	static void Function_Empty();
-	// Funciones especiales
+	// Funciones especiales			
 	HBRUSH ColorEdit(WPARAM& wParam);	//Color de fondo
 	//Clase Amiga
 	friend Contenedor;

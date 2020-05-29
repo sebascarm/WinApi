@@ -1,8 +1,9 @@
 //######################################################//
-// WIN API v2.5											//
+// WIN API v3.1											//
 //######################################################//
 // ULTIMA MODIFICACION DOCUMENTADA                      //
-// 21/03/2020                                           //
+// 28/05/2020                                           //
+// Shape 1.0											//
 // List Box con doble click								//
 // RichText con SetFont									//
 // Habilitar y deshabilitar objetos						//
@@ -171,7 +172,9 @@ public:
 	virtual void Set_Enable() = 0;
 	virtual void Set_Disable() = 0;
 	// Metodos propios		
-	//virtual void Set_Color(COLORREF Color) = 0;
+	virtual void Set_Color(COLORREF Color) = 0;
+	virtual void Set_BackColor(COLORREF Color) = 0;
+	virtual void Set_FreePoints(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, int x5, int y5) = 0;
 };
 
 
