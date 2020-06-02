@@ -177,7 +177,6 @@ public:
 	virtual void Set_Color(COLORREF Color) = 0;
 	virtual void Set_BackColor(COLORREF Color) = 0;
 	virtual void Set_FreePoints(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, int x5, int y5) = 0;
-	virtual void Change_BackColor(COLORREF Color) = 0;
 };
 
 

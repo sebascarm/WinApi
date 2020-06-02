@@ -10,10 +10,20 @@ void C_Shape::Create(Win_Frame* pFrame, S_Style Style, int x, int y, int ancho, 
 
 void C_Shape::Set_Color(COLORREF Color){
     this->Color = Color;
+    if (Iniciado) {
+        // Forzamos el redibujado al no ser el arranque
+        this->Redibujar = true;
+        RedrawWindow(*hWnd_Padre, 0, 0, RDW_INVALIDATE);
+    }
 }
 
 void C_Shape::Set_BackColor(COLORREF Color){
     this->BackColor = Color;
+    if (Iniciado) {
+        // Forzamos el redibujado al no ser el arranque
+        this->Redibujar = true;
+        RedrawWindow(*hWnd_Padre, 0, 0, RDW_INVALIDATE);
+    }
 }
 
 void C_Shape::Set_FreePoints(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, int x5, int y5){
@@ -23,16 +33,6 @@ void C_Shape::Set_FreePoints(int x1, int y1, int x2, int y2, int x3, int y3, int
     this->Poligono[3] = { x+x4,y+y4 };
     this->Poligono[4] = { x+x5,y+y5 };
     
-}
-
-//*********************************************
-//*** Metodos propios       	            ***
-//*********************************************
-void C_Shape::Change_BackColor(COLORREF Color) {
-    this->BackColor = Color;
-    this->Redibujar = true;
-    RedrawWindow(*hWnd_Padre, 0, 0, RDW_INVALIDATE);
-    //SendMessage(hWnd, WM_SIZE, 0, 0); // send the message to SIZE just to redraw
 }
 
 //*********************************************
@@ -67,7 +67,8 @@ void C_Shape::Draw_Shape(HDC hdc) {
     DeleteObject(hBrush); 
     DeleteObject(holdPen);
     DeleteObject(holdBrush);
-    this->Redibujar = false;
+    this->Redibujar = false; 
+    this->Iniciado = true;
 }
 
 

@@ -1,5 +1,7 @@
-## WinApi v3.1
-    - test
+## WinApi v3.2
+    
+### 02/06/2020
+    - Shape v1.2 (Cambio de color)
 ### 28/05/2020
     - Shape v1.0 (Final)
 
