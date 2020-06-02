@@ -5,6 +5,7 @@ void C_Shape::Create(Win_Frame* pFrame, S_Style Style, int x, int y, int ancho, 
 	C_Objeto::Create(pFrame, "", x, y, ancho, alto);
 	C_Objeto::Contener(*this);
 	S_Estilo = Style;   // Line, Rect, Circle
+    this->Redibujar = true;
 }
 
 void C_Shape::Set_Color(COLORREF Color){
@@ -25,7 +26,17 @@ void C_Shape::Set_FreePoints(int x1, int y1, int x2, int y2, int x3, int y3, int
 }
 
 //*********************************************
-//*** EVENTO CLICK (El loop debe llamarlo)	***
+//*** Metodos propios       	            ***
+//*********************************************
+void C_Shape::Change_BackColor(COLORREF Color) {
+    this->BackColor = Color;
+    this->Redibujar = true;
+    RedrawWindow(*hWnd_Padre, 0, 0, RDW_INVALIDATE);
+    //SendMessage(hWnd, WM_SIZE, 0, 0); // send the message to SIZE just to redraw
+}
+
+//*********************************************
+//*** (El loop debe llamarlo)	            ***
 //*** No se activa solo						***
 //*********************************************
 void C_Shape::Draw_Shape(HDC hdc) {
@@ -56,7 +67,7 @@ void C_Shape::Draw_Shape(HDC hdc) {
     DeleteObject(hBrush); 
     DeleteObject(holdPen);
     DeleteObject(holdBrush);
-    
+    this->Redibujar = false;
 }
 
 

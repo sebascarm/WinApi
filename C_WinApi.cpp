@@ -109,15 +109,17 @@ LRESULT CALLBACK C_WinApi::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 				// REcorremos los elementos del frame		
 				for (int j = 0; j < Elementos; j++) {
 					if (CONTENEDOR[j].Tipo == TipoObjeto::T_SHAPE) {
-						hPadreElem = CONTENEDOR[j].pShape->Get_hWnd_Padre();
-						if (hWnd == *hPadreElem) {
-							// Iniciar pintado	
-							if (inicial) {
-								hdc = BeginPaint(hWnd, &PStruc);
-								inicial = false;
+						if (CONTENEDOR[j].pShape->Redibujar) {	
+							hPadreElem = CONTENEDOR[j].pShape->Get_hWnd_Padre();
+							if (hWnd == *hPadreElem) {
+								// Iniciar pintado	
+								if (inicial) {
+									hdc = BeginPaint(hWnd, &PStruc);
+									inicial = false;
+								}
+								// Dibujar			
+								CONTENEDOR[j].pShape->Draw_Shape(hdc);			// Enviamos el evento 	
 							}
-							// Dibujar			
-							CONTENEDOR[j].pShape->Draw_Shape(hdc);			// Enviamos el evento 	
 						}
 					}
 				}
