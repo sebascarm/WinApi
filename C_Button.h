@@ -1,9 +1,19 @@
+//######################################################//
+// Button v2.0											//
+//######################################################//
+// ULTIMA MODIFICACION DOCUMENTADA                      //
+// 04/06/2020                                           //
+// Evento press y release								//
+//######################################################//
+
 #pragma once
 #include "C_Objeto.h"
 
 class C_Button :public Win_Button, public C_Objeto{
 protected:
 	void	(*Funcion_Click)() = &Function_Empty;
+	void	(*Funcion_Press)() = &Function_Empty;
+	
 public:
 	void Create(Win_Frame* pFrame, std::string Text, int x, int y, int ancho, int alto);
 	// Propiedades			
@@ -17,8 +27,9 @@ public:
 	void	Set_Disable() { C_Objeto::Set_Disable(); }
 	// Asignar Eventos		
 	void	Assign_Event_Click(void(*Function)());
+	void	Assign_Event_Press(void(*Function)());
 	// Evento				
 	void	Event_Click();
-	
+	void	Event_Press();
 };
 

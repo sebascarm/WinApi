@@ -75,20 +75,23 @@ void Contenedor::New_Object(C_Shape& _Objeto) {
 void Contenedor::Show() {
 	switch (Tipo) {
 	case  TipoObjeto::T_FRAME:
-		pFrame->Show();
-		break;
+		pFrame->Show(); break;
 	}
 }
 
-// GET hWnd (Solo Frame lo usa)									
+// GET hWnd (todos			)									
 HWND Contenedor::Get_hWnd() {
 	switch (Tipo) {
-	case TipoObjeto::T_FRAME:
-		return pFrame->hWnd;
-		break;
-	case TipoObjeto::T_LABEL:
-		return pLabel->hWnd;
-		break;
+	case TipoObjeto::T_FRAME: return pFrame->hWnd; break;
+	case TipoObjeto::T_BUTTON: return pButton->hWnd; break;
+	case TipoObjeto::T_MULTILINE: return pMultiLine->hWnd; break;
+	case TipoObjeto::T_TEXTBOX: return pTextBox->hWnd; break;
+	case TipoObjeto::T_MENU: return pMenu->hWnd; break;
+	case TipoObjeto::T_LABEL: return pLabel->hWnd; break;
+	case TipoObjeto::T_GROUPBOX: return pGroupBox->hWnd; break;
+	case TipoObjeto::T_LISTBOX: return pListBox->hWnd; break;
+	case TipoObjeto::T_RICHTEXT: return pRichText->hWnd; break;
+	case TipoObjeto::T_SHAPE: return pShape->hWnd; break;
 	default:
 		return 0;
 	}
@@ -108,53 +111,30 @@ HBRUSH Contenedor::ColorEdit(WPARAM wParam) {
 //Dibujar														
 void Contenedor::Draw() {
 	switch (Tipo) {
-	case  TipoObjeto::T_FRAME:
-		pFrame->Draw();
-		break;
-	case TipoObjeto::T_BUTTON:
-		pButton->Draw();
-		break;
-	case TipoObjeto::T_LABEL:
-		pLabel->Draw();
-		break;
-	case TipoObjeto::T_GROUPBOX:
-		pGroupBox->Draw();
-		break;
-	case TipoObjeto::T_TEXTBOX:
-		pTextBox->Draw();
-		break;
-	case TipoObjeto::T_MENU:
-		pMenu->Draw();
-		break;
-	case TipoObjeto::T_MULTILINE:
-		pMultiLine->Draw();
-		break;
-	case TipoObjeto::T_LISTBOX:
-		pListBox->Draw();
-		break;
-	case TipoObjeto::T_RICHTEXT:
-		pRichText->Draw();
-		break;
-	case TipoObjeto::T_SHAPE:
-		pShape->Draw();
-		break;
+	case TipoObjeto::T_FRAME: pFrame->Draw(); break;
+	case TipoObjeto::T_BUTTON: pButton->Draw();	break;
+	case TipoObjeto::T_LABEL: pLabel->Draw(); break;
+	case TipoObjeto::T_GROUPBOX: pGroupBox->Draw();	break;
+	case TipoObjeto::T_TEXTBOX:	pTextBox->Draw(); break;
+	case TipoObjeto::T_MENU: pMenu->Draw();	break;
+	case TipoObjeto::T_MULTILINE: pMultiLine->Draw(); break;
+	case TipoObjeto::T_LISTBOX:	pListBox->Draw(); break;
+	case TipoObjeto::T_RICHTEXT: pRichText->Draw();	break;
+	case TipoObjeto::T_SHAPE: pShape->Draw(); break;
 	}
 }
 
 int Contenedor::Get_ID() {
 	switch (Tipo) {
-	case TipoObjeto::T_BUTTON:
-		return pButton->ID;
-		break;
-	case TipoObjeto::T_MENU:
-		return pMenu->ID;
-		break;
-	case TipoObjeto::T_LISTBOX:
-		return pListBox->ID;
-		break;
-	case TipoObjeto::T_LABEL:
-		return pLabel->ID;
-		break;
+	case TipoObjeto::T_BUTTON: return pButton->ID; break;
+	case TipoObjeto::T_LABEL: return pLabel->ID; break;
+	case TipoObjeto::T_GROUPBOX: pGroupBox->ID;	break;
+	case TipoObjeto::T_TEXTBOX:	pTextBox->ID; break;
+	case TipoObjeto::T_MENU: return pMenu->ID; break;
+	case TipoObjeto::T_MULTILINE: pMultiLine->ID; break;
+	case TipoObjeto::T_LISTBOX:	return pListBox->ID; break;
+	case TipoObjeto::T_RICHTEXT: pRichText->ID;	break;
+	case TipoObjeto::T_SHAPE: pShape->ID; break;
 	default:
 		return 0;
 	}

@@ -1,8 +1,9 @@
 //######################################################//
-// Shape v1.2											//
+// Shape v1.3											//
 //######################################################//
 // ULTIMA MODIFICACION DOCUMENTADA                      //
-// 28/05/2020                                           //
+// 03/05/2020                                           //
+// Correccion en el redibujado							//
 // Cambio de color										//
 // Fix Varios graficos									//
 // Creacion                                             //
@@ -18,11 +19,12 @@
 // Agregar en C_Objeto	
 
 class C_Shape:public Win_Shape, public C_Objeto {
-private:
+protected:
 	bool	 Iniciado = false;
 	COLORREF Color =  RGB(0, 0, 0) ;
 	COLORREF BackColor = RGB(255,0,0);
 	POINT	 Poligono[5] = { 0,0,0,0,0,0,0,0,0,0 };	// Para poligonos
+
 public:
 	void Create(Win_Frame* pFrame, S_Style Style, int x, int y, int ancho, int alto);
 	// Propiedades	
@@ -42,5 +44,6 @@ public:
 	void	Set_FreePoints(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, int x5, int y5);
 	// Evento		(Llamado automatico al dibujar)
 	void	Draw_Shape(HDC hdc);
+
 };
 

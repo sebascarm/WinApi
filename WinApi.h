@@ -62,7 +62,8 @@ public:
 	virtual void	Set_Enable() = 0;
 	virtual void	Set_Disable() = 0;
 	// Asignacion de eventos
-	virtual void	Assign_Event_Click(void(*Function)()) = 0;
+	virtual void	Assign_Event_Click(void(*Function)()) = 0;	// Se Ejecuta al soltar el boton	
+	virtual void	Assign_Event_Press(void(*Function)()) = 0;	// se Ejecuta al presionar el boton	
 };
 // LABEL			
 class Win_Label {

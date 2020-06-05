@@ -18,7 +18,7 @@
 
 class C_Objeto {
 protected:
-	int	 ID			 = NULL;
+	int	 ID			 = NULL;				// Numero de elemento en Windows (distinto al hWnd)
 	unsigned __int64 Elemento;				// Numero de elemento - distinto al ID
 	HWND hWnd		 = nullptr;
 	HWND *hWnd_Padre = nullptr;
@@ -54,6 +54,7 @@ protected:
 public:
 	void Create(Win_Frame* pFrame, std::string Text, int x, int y, int ancho, int alto);
 	//Propiedades comunes no expuestas
+	HWND*	Get_hWnd();
 	HWND*   Get_hWnd_Padre();
 	// Propiedades comunues	
 	string	Get_Text();

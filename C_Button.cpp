@@ -7,7 +7,8 @@ void C_Button::Create(Win_Frame* pFrame, std::string Text, int x, int y, int anc
 	C_Objeto::Contener(*this);
 	//Detalles del objeto
 	Tipo = "BUTTON";
-	Estilo = BS_PUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_FLAT;
+	//Estilo = BS_PUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_FLAT;
+	Estilo = BS_PUSHBUTTON | BS_NOTIFY | WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_FLAT;
 }
 
 
@@ -17,7 +18,9 @@ void C_Button::Create(Win_Frame* pFrame, std::string Text, int x, int y, int anc
 void C_Button::Assign_Event_Click(void(*Function)()) {
 	Funcion_Click = Function;
 }
-
+void C_Button::Assign_Event_Press(void(*Function)()) {
+	Funcion_Press = Function;
+}
 
 //*********************************************
 //*** EVENTO CLICK (El loop debe llamarlo)	***
@@ -26,5 +29,9 @@ void C_Button::Assign_Event_Click(void(*Function)()) {
 void C_Button::Event_Click() {
 	std::thread Th_Click([this] {Funcion_Click(); });
 	Th_Click.detach();
+}
+void C_Button::Event_Press() {
+	std::thread Th_Press([this] {Funcion_Press(); });
+	Th_Press.detach();
 }
 

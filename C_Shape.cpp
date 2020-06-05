@@ -1,5 +1,6 @@
 #include "C_Shape.h"
 
+
 void C_Shape::Create(Win_Frame* pFrame, S_Style Style, int x, int y, int ancho, int alto) {
 	// Crear y contener
 	C_Objeto::Create(pFrame, "", x, y, ancho, alto);
@@ -10,7 +11,7 @@ void C_Shape::Create(Win_Frame* pFrame, S_Style Style, int x, int y, int ancho, 
 
 void C_Shape::Set_Color(COLORREF Color){
     this->Color = Color;
-    if (Iniciado) {
+    if (this->Iniciado) {
         // Forzamos el redibujado al no ser el arranque
         this->Redibujar = true;
         RedrawWindow(*hWnd_Padre, 0, 0, RDW_INVALIDATE);
@@ -19,10 +20,12 @@ void C_Shape::Set_Color(COLORREF Color){
 
 void C_Shape::Set_BackColor(COLORREF Color){
     this->BackColor = Color;
-    if (Iniciado) {
+    if (this->Iniciado) {
         // Forzamos el redibujado al no ser el arranque
         this->Redibujar = true;
-        RedrawWindow(*hWnd_Padre, 0, 0, RDW_INVALIDATE);
+        const RECT rect = { x,y,x+ancho,y+alto };
+        //InvalidateRect(hWnd, &rect, TRUE);
+        RedrawWindow(*hWnd_Padre, &rect, 0, RDW_INVALIDATE);
     }
 }
 
@@ -40,13 +43,10 @@ void C_Shape::Set_FreePoints(int x1, int y1, int x2, int y2, int x3, int y3, int
 //*** No se activa solo						***
 //*********************************************
 void C_Shape::Draw_Shape(HDC hdc) {
-    
     HGDIOBJ hPen = CreatePen(PS_SOLID, 1, this->Color);
     HGDIOBJ hBrush = CreateSolidBrush(this->BackColor);
-
-    HGDIOBJ holdPen = SelectObject(hdc, hPen);
+   HGDIOBJ holdPen = SelectObject(hdc, hPen);
     HGDIOBJ holdBrush = SelectObject(hdc, hBrush);
-
     switch (S_Estilo) {
     case S_Style::S_LINE:
         MoveToEx(hdc, x, y, NULL);
@@ -62,7 +62,6 @@ void C_Shape::Draw_Shape(HDC hdc) {
         Polygon(hdc, this->Poligono, 5);
         break;
     }
-
     DeleteObject(hPen);
     DeleteObject(hBrush); 
     DeleteObject(holdPen);

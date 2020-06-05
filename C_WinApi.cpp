@@ -6,6 +6,8 @@
 #include "C_ListBox.h"
 #include "C_Shape.h"
 
+#include <string.h>
+
 extern std::vector <Contenedor> CONTENEDOR;
 
 //*********************************************
@@ -23,8 +25,6 @@ void C_WinApi::Create(HINSTANCE hInstance) {
 		LR_DEFAULTSIZE |		// default metrics based on the type (IMAGE_ICON, 32x32)
 		LR_SHARED				// let the system release the handle when it's no longer used
 	);
-
-
 	this->hInstance = hInstance;
 	NombreClase = "WinApi";
 	//registrar la clase windows
@@ -40,7 +40,7 @@ void C_WinApi::Create(HINSTANCE hInstance) {
 	wc.lpszMenuName = nullptr;
 	wc.hIconSm = nullptr;
 	wc.lpszClassName = (LPSTR)NombreClase.c_str();
-	//Registrar
+	//Registrar					
 	RegisterClassEx(&wc);
 
 }
@@ -53,6 +53,12 @@ HINSTANCE C_WinApi::Get_Instance(){
 	return hInstance;
 }
 
+WNDPROC  OldButtonProc;
+
+//*********************************************
+//*** DIBUJADO DE LOS ELEMENTOS				***
+//*********************************************
+
 void C_WinApi::Draw() {
 	//Dibujamos solo todos los frame creados (sin mostrarlos)
 	int Elemento = (int)CONTENEDOR.size();
@@ -61,39 +67,48 @@ void C_WinApi::Draw() {
 			CONTENEDOR[i].Draw();
 		}
 	}
-	//Dibujar controles
+	//Dibujar controles										
 	for (int i = 0; i < Elemento; i++) {
 		if (CONTENEDOR[i].Tipo != TipoObjeto::T_FRAME) {
-			// No Creamos los objetos Shape
+			// No dibujamos los objetos Shape			
 			if (CONTENEDOR[i].Tipo != TipoObjeto::T_SHAPE) {
 				CONTENEDOR[i].Draw();
+				// Agregamos procedimiento para botons	
+				if (CONTENEDOR[i].Tipo == TipoObjeto::T_BUTTON) {
+					OldButtonProc = (WNDPROC)
+					SetWindowLongPtr(CONTENEDOR[i].Get_hWnd(), GWLP_WNDPROC, (LONG_PTR)&Boton_Proc);
+					//SetWindowLongPtr(*CONTENEDOR[i].pButton->Get_hWnd(), GWLP_WNDPROC, (LONG_PTR)&Boton_Proc);
+				}
 			}
 		}
 	}
-
-	//Mostramos Frames
+	//Mostramos Frames					
 	for (int i = 0; i < Elemento; i++) {
-		if (CONTENEDOR[i].Tipo == TipoObjeto::T_FRAME) {
+		if (CONTENEDOR[i].Tipo == TipoObjeto::T_FRAME) 
 			CONTENEDOR[i].Show();
-		}
 	}
 }
 
 //*********************************************
 //*** CALLBACK								***
 //*********************************************
+
+int ii = 0;	// para test de elementos
+
 LRESULT CALLBACK C_WinApi::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	//Debug de mensajes										
 	//static WindowsMessageMap mm;							
 	//OutputDebugString(mm(msg, lParam, wParam).c_str());	
 	
-	int ID			 = LOWORD(wParam);				// Identificador del control		
+	int ID			 = LOWORD(wParam);				// Identificador del control Win	
 	int ID_Long		 = GetDlgCtrlID((HWND)lParam);  // Identificador en cambio de color	
-	int Notificacion = HIWORD(wParam);	// Codigo de notificacion recibida (ej: click, doble click)
+	int Notificacion = HIWORD(wParam);				// Codigo de notificacion recibida (ej: click, doble click)
 	int Elementos    = (int)CONTENEDOR.size();
-	
+		
 	HDC hdc = NULL;
 	PAINTSTRUCT PStruc;
+
+	//Test(ID, ID_Long, Elementos, TipoObjeto::T_BUTTON, false);
 
 	switch (msg) {
 	//	Crear controles		//								
@@ -123,13 +138,14 @@ LRESULT CALLBACK C_WinApi::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 						}
 					}
 				}
-				// Fin de pintado				
+				// Fin de pintado							
 				if (!inicial) {
 					EndPaint(hWnd, &PStruc);
 				}
 			}
 		}
 		break;
+	// CERRAR												
 	case WM_CLOSE:
 		PostQuitMessage(69);
 		break;
@@ -137,9 +153,8 @@ LRESULT CALLBACK C_WinApi::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 	case WM_CTLCOLORSTATIC: {
 		for (int i = 0; i < Elementos; i++) {
 			if (CONTENEDOR[i].Tipo == TipoObjeto::T_LABEL) {
-				if (CONTENEDOR[i].Get_ID() == ID_Long) {
+				if (CONTENEDOR[i].Get_ID() == ID_Long) 
 					return (LRESULT)CONTENEDOR[i].ColorEdit(wParam); // devuelve el pincel modificado
-				}
 			}
 		}
 		break;
@@ -148,17 +163,20 @@ LRESULT CALLBACK C_WinApi::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 	case WM_COMMAND: {
 		for (int i = 0; i < Elementos; i++) {
 			// **** Envio de click a botones				
-			if (CONTENEDOR[i].Tipo == TipoObjeto::T_BUTTON) {
-				// Buscamos el boton que recibe el evento	
-				if (CONTENEDOR[i].Get_ID() == ID)
-					CONTENEDOR[i].pButton->Event_Click();		// Enviamos el evento 
-			}
+			//if (CONTENEDOR[i].Tipo == TipoObjeto::T_BUTTON) {
+			//	// Buscamos el boton que recibe el evento	
+			//	if (CONTENEDOR[i].Get_ID() == ID) {
+			//		CONTENEDOR[i].pButton->Event_Click();		// Enviamos el click
+			//		OutputDebugString("--click--\n");
+			//	}
+			//}
 			// **** Envio de click a Menu					
 			if (CONTENEDOR[i].Tipo == TipoObjeto::T_MENU) {
 				//Recorremos los elementos del menu			
 				for (int j = 0; j < CONTENEDOR[i].pMenu->V_ID.size(); j++) {
-					if (CONTENEDOR[i].pMenu->V_ID[j] == ID)
+					if (CONTENEDOR[i].pMenu->V_ID[j] == ID) {
 						CONTENEDOR[i].pMenu->Event_Click(wParam);
+					}
 				}
 			}
 			// **** List box								
@@ -175,6 +193,7 @@ LRESULT CALLBACK C_WinApi::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 					}
 				}
 			}
+
 		}
 		break;
 	}
@@ -195,6 +214,53 @@ LRESULT CALLBACK C_WinApi::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 	}
 	return DefWindowProc(hWnd, msg, wParam, lParam);
 }
+
+//*********************************************
+//*** CALLBACK BOTON						***
+//*********************************************
+
+LRESULT CALLBACK C_WinApi::Boton_Proc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	int ID			 = LOWORD(wParam);				// Identificador del control		
+	int ID_Long		 = GetDlgCtrlID((HWND)lParam);  // Identificador en cambio de color	
+	int Notificacion = HIWORD(wParam);				// Codigo de notificacion recibida (ej: click, doble click)
+	int Elementos = (int)CONTENEDOR.size();
+
+	//Test(msg, ID, ID_Long, Notificacion, Elementos, TipoObjeto::T_BUTTON, false);
+
+	switch (msg) {
+	// PRECION DE BOTON										
+	case WM_LBUTTONDOWN: {
+		for (int i = 0; i < Elementos; i++) {
+			// **** Envio de presion a botones				
+			if (CONTENEDOR[i].Tipo == TipoObjeto::T_BUTTON) {
+				// Buscamos el boton que recibe el evento	
+				HWND Cont = CONTENEDOR[i].Get_hWnd();
+				if (Cont == hWnd) {
+					CONTENEDOR[i].pButton->Event_Press();		// Enviamos el click	
+					//OutputDebugString("--press--\n");
+				}
+			}
+		}
+		break;
+	}
+	// SOLTAR BOTON											
+	case WM_LBUTTONUP: {
+		for (int i = 0; i < Elementos; i++) {
+			// **** Envio de presion a botones				
+			if (CONTENEDOR[i].Tipo == TipoObjeto::T_BUTTON) {
+				// Buscamos el boton que recibe el evento	
+				if (CONTENEDOR[i].Get_hWnd() == hWnd) {			// El id esta en el long
+					CONTENEDOR[i].pButton->Event_Click();		// Enviamos el click	
+					//OutputDebugString("--release--\n");
+				}
+			}
+		}
+		break;
+	}
+	}
+	return CallWindowProc(OldButtonProc, hWnd, msg, wParam, lParam);
+}
+
 
 //*********************************************
 //*** LOOP									***
@@ -221,6 +287,32 @@ void C_WinApi::Exit() {
 	PostQuitMessage(69);
 }
 
+//*********************************************
+//*** TEST DE ELEMENTOS						***
+//*********************************************
+
+void C_WinApi::Test(UINT msg, int ID, int ID_Long, int Notificacion, int Elementos, TipoObjeto Tipo, bool Test1) {
+	string tmp;
+	// Test 1
+	if (Test1) {
+		tmp = to_string(ii) + " ID=" + to_string(ID) + " ID_LNG=" + to_string(ID_Long) + "\n";
+		OutputDebugString(tmp.c_str());
+		ii++;
+	}
+	// Test 2
+	for (int i = 0; i < Elementos; i++) {
+		//if (CONTENEDOR[i].Get_ID() == ID_Long) {
+		if (CONTENEDOR[i].Tipo == Tipo) {
+			//string tmp = to_string(ii) + "     BOT ID-" + to_string(ID_Long) + " N-" + to_string(Notificacion) + " MSG-" + to_string(msg) + "\n";
+			tmp = "     ELEMENTO TESTEADO ID=" + to_string(CONTENEDOR[i].Get_ID()) + "\n";
+			OutputDebugString(tmp.c_str());
+			tmp = to_string(ii) + "     BOT ID=" + to_string(ID) + " ID LNG=" + to_string(ID_Long) + " NOTIF=" + to_string(Notificacion) + " MSG-" + to_string(msg) + "\n";
+			OutputDebugString(tmp.c_str());
+			ii++;
+		}
+		//}
+	}
+}
 
 //*********************************************
 //*** Export								***

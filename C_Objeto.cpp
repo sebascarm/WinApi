@@ -12,6 +12,8 @@
 #include <vector>
 #include "Contenedor.h"
 
+#include <windows.h>
+
 extern std::vector <Contenedor> CONTENEDOR;
 
 void C_Objeto::Create(Win_Frame* pFrame, std::string Text, int x, int y, int ancho, int alto) {
@@ -99,6 +101,8 @@ void C_Objeto::Draw() {
 		NULL,						/* hInstance,	/* Instancia */
 		NULL);						/* Sin datos de creación de ventana */
 	//SendMessage(hWnd, WM_SETFONT, (WPARAM)hFont, MAKELPARAM(TRUE, 0));
+	
+	
 	Set_Font(Fuente);
 }
 
@@ -140,6 +144,10 @@ HBRUSH C_Objeto::ColorEdit(WPARAM& wParam) {
 //*********************************************
 
 // No expuesto
+HWND* C_Objeto::Get_hWnd() {
+	return &hWnd;
+}
+
 HWND* C_Objeto::Get_hWnd_Padre(){
 	return this->hWnd_Padre;
 }
