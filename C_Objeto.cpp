@@ -143,6 +143,10 @@ HBRUSH C_Objeto::ColorEdit(WPARAM& wParam) {
 //*** PROPIEDADES COMUNES					***
 //*********************************************
 
+int C_Objeto::Get_ID(){
+	return ID;
+}
+
 // No expuesto
 HWND* C_Objeto::Get_hWnd() {
 	return &hWnd;
@@ -201,6 +205,9 @@ void C_Objeto::Set_Disable() {
 void C_Objeto::Function_Empty() {
 	//Debug de mensajes
 	OutputDebugString("EVENT NOT DEFINED\n");
+}
+void C_Objeto::Function_ID_Empty(int ID) {
+	OutputDebugString("EVENT+ID NOT DEFINED\n");
 }
 
 //*********************************************

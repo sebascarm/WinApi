@@ -54,6 +54,7 @@ public:
 class Win_Button {
 public:
 	virtual void	Create(Win_Frame* _Frame, string Text, int x, int y, int ancho = 60, int alto = 20) = 0;
+	virtual int		Get_ID() = 0;
 	virtual string	Get_Text()  = 0;
 	virtual int		Get_Pos_X() = 0;
 	virtual int		Get_Pos_Y() = 0;
@@ -64,6 +65,8 @@ public:
 	// Asignacion de eventos
 	virtual void	Assign_Event_Click(void(*Function)()) = 0;	// Se Ejecuta al soltar el boton	
 	virtual void	Assign_Event_Press(void(*Function)()) = 0;	// se Ejecuta al presionar el boton	
+	virtual void	Assign_Event_Click_ID(void(*Function)(int ID)) = 0; // Con Envio de ID			
+	virtual void	Assign_Event_Press_ID(void(*Function)(int ID)) = 0; // Con Envio de ID			
 };
 // LABEL			
 class Win_Label {

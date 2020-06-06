@@ -46,6 +46,7 @@ protected:
 	void Draw();
 	// Funcion vacia para callback	
 	static void Function_Empty();
+	static void Function_ID_Empty(int ID);
 	// Funciones especiales			
 	HBRUSH ColorEdit(WPARAM& wParam);	//Color de fondo
 	//Clase Amiga
@@ -54,6 +55,7 @@ protected:
 public:
 	void Create(Win_Frame* pFrame, std::string Text, int x, int y, int ancho, int alto);
 	//Propiedades comunes no expuestas
+	int		Get_ID();
 	HWND*	Get_hWnd();
 	HWND*   Get_hWnd_Padre();
 	// Propiedades comunues	
