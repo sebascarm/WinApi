@@ -1,18 +1,26 @@
 #include "C_ListBox.h"
 
-void C_ListBox::Create(Win_Frame* pFrame, int x, int y, int ancho, int alto) {
+void C_ListBox::Create(Win_Frame* pFrame, int x, int y, int ancho, int alto, bool Sort) {
 	// Crear y contener
 	C_Objeto::Create(pFrame, "", x, y, ancho, alto);
 	C_Objeto::Contener(*this);
 	// Detalles del objeto
 	Tipo = "LISTBOX";
 	// Estilo
-	Estilo = WS_CHILD | WS_VISIBLE | LBS_STANDARD | LBS_NOTIFY;
+	if (Sort) {
+		Estilo = WS_CHILD | WS_VISIBLE | LBS_STANDARD | LBS_NOTIFY;
+	} else {
+		Estilo = WS_CHILD | WS_VISIBLE | LBS_NOTIFY;
+	}
 }
 
 int C_ListBox::Get_Row() {
-	return SendMessage(hWnd, LB_GETCURSEL, 0, 0);
+	return (int)SendMessage(hWnd, LB_GETCURSEL, 0, 0);
 }
+void C_ListBox::Set_Row(int Row) {
+	SendMessage(hWnd, LB_SETCURSEL, (WPARAM)Row, 0);
+}
+
 
 string C_ListBox::Get_Text() {
 	//string text;
@@ -20,7 +28,7 @@ string C_ListBox::Get_Text() {
 	int length;
 	int row = this->Get_Row();
 	
-	length = SendMessage(hWnd, LB_GETTEXTLEN, (WPARAM)row, 0);
+	length = (int)SendMessage(hWnd, LB_GETTEXTLEN, (WPARAM)row, 0);
 	text = new char[length + 1];
 	SendMessage(hWnd, LB_GETTEXT, (WPARAM)row, (LPARAM)text);
 	//SendMessage(hWnd, LB_GETTEXT, row, (LPARAM)text);

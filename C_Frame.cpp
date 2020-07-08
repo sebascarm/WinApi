@@ -44,6 +44,13 @@ void C_Frame::Show() {
 	this->Visible = true;
 }
 
+void C_Frame::Hide() {
+	ShowWindow(hWnd, SW_HIDE);
+	this->Visible = false;
+}
+
+
+
 //METODOS
 HWND& C_Frame::Get_hWnd() {
 	return hWnd;

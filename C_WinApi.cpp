@@ -5,6 +5,8 @@
 #include "C_Menu.h"
 #include "C_ListBox.h"
 #include "C_Shape.h"
+#include "C_TextBox.h"
+#include "C_Graphic.h"
 
 #include <string.h>
 
@@ -54,6 +56,7 @@ HINSTANCE C_WinApi::Get_Instance(){
 }
 
 WNDPROC  OldButtonProc;
+WNDPROC  OldTextProc;
 
 //*********************************************
 //*** DIBUJADO DE LOS ELEMENTOS				***
@@ -73,11 +76,14 @@ void C_WinApi::Draw() {
 			// No dibujamos los objetos Shape			
 			if (CONTENEDOR[i].Tipo != TipoObjeto::T_SHAPE) {
 				CONTENEDOR[i].Draw();
-				// Agregamos procedimiento para botons	
 				if (CONTENEDOR[i].Tipo == TipoObjeto::T_BUTTON) {
+					// Agregamos procedimiento para botons
 					OldButtonProc = (WNDPROC)
 					SetWindowLongPtr(CONTENEDOR[i].Get_hWnd(), GWLP_WNDPROC, (LONG_PTR)&Boton_Proc);
-					//SetWindowLongPtr(*CONTENEDOR[i].pButton->Get_hWnd(), GWLP_WNDPROC, (LONG_PTR)&Boton_Proc);
+				} else if (CONTENEDOR[i].Tipo == TipoObjeto::T_TEXTBOX) {
+					// Agregamos procedimiento para TEXTOS
+					OldTextProc = (WNDPROC)
+					SetWindowLongPtr(CONTENEDOR[i].Get_hWnd(), GWLP_WNDPROC, (LONG_PTR)&Text_Proc);
 				}
 			}
 		}
@@ -107,8 +113,7 @@ LRESULT CALLBACK C_WinApi::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 		
 	HDC hdc = NULL;
 	PAINTSTRUCT PStruc;
-
-	//Test(ID, ID_Long, Elementos, TipoObjeto::T_BUTTON, false);
+	
 
 	switch (msg) {
 	//	Crear controles		//								
@@ -123,6 +128,7 @@ LRESULT CALLBACK C_WinApi::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 				HWND*	hPadreElem;
 				// REcorremos los elementos del frame		
 				for (int j = 0; j < Elementos; j++) {
+					// SHAPE
 					if (CONTENEDOR[j].Tipo == TipoObjeto::T_SHAPE) {
 						if (CONTENEDOR[j].pShape->Redibujar) {	
 							hPadreElem = CONTENEDOR[j].pShape->Get_hWnd_Padre();
@@ -137,6 +143,19 @@ LRESULT CALLBACK C_WinApi::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 							}
 						}
 					}
+					// GRAPHIC
+					if (CONTENEDOR[j].Tipo == TipoObjeto::T_GRAPHIC) {
+						if (CONTENEDOR[j].pGraphic->Redibujar) {
+							hPadreElem = CONTENEDOR[j].pGraphic->Get_hWnd_Padre();
+							if (hWnd == *hPadreElem) {
+								if (inicial) {	// Iniciar pintado	
+									hdc = BeginPaint(hWnd, &PStruc);
+									inicial = false;
+								} // Dibujar			
+								CONTENEDOR[j].pGraphic->Draw_Shape(hdc);			// Enviamos el evento 	
+							}
+						}
+					}
 				}
 				// Fin de pintado							
 				if (!inicial) {
@@ -145,10 +164,7 @@ LRESULT CALLBACK C_WinApi::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 			}
 		}
 		break;
-	// CERRAR												
-	case WM_CLOSE:
-		PostQuitMessage(69);
-		break;
+	
 	// CAMBIAR COLOR DE FONDOS DE TODOS LOS LABELS			
 	case WM_CTLCOLORSTATIC: {
 		for (int i = 0; i < Elementos; i++) {
@@ -162,14 +178,19 @@ LRESULT CALLBACK C_WinApi::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 	// RECEPCION DE COMANDOS								
 	case WM_COMMAND: {
 		for (int i = 0; i < Elementos; i++) {
-			// **** Envio de click a botones				
-			//if (CONTENEDOR[i].Tipo == TipoObjeto::T_BUTTON) {
-			//	// Buscamos el boton que recibe el evento	
-			//	if (CONTENEDOR[i].Get_ID() == ID) {
-			//		CONTENEDOR[i].pButton->Event_Click();		// Enviamos el click
-			//		OutputDebugString("--click--\n");
-			//	}
-			//}
+			
+			// **** Se debe mejorar el rendimiento via notification
+			// **** Envio de click a botones (Evento propio)
+			// **** Envio de change a textbox				
+			if (CONTENEDOR[i].Tipo == TipoObjeto::T_TEXTBOX) {
+				int cont_ID = CONTENEDOR[i].Get_ID();
+				if (CONTENEDOR[i].Get_ID() == ID){
+					//Test(msg, ID, ID_Long, Notificacion, Elementos, TipoObjeto::T_TEXTBOX,true);
+					if (EN_CHANGE == Notificacion) {
+						CONTENEDOR[i].pTextBox->Event_Text_Change();
+					}
+				}
+			}
 			// **** Envio de click a Menu					
 			if (CONTENEDOR[i].Tipo == TipoObjeto::T_MENU) {
 				//Recorremos los elementos del menu			
@@ -211,12 +232,27 @@ LRESULT CALLBACK C_WinApi::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 		}
 		break;
 	}
+	// CERRAR												
+	case WM_CLOSE:
+		// Solo cerramos si el primer objeto es cerrado FRAME 1
+		if (hWnd == CONTENEDOR[0].Get_hWnd()) {
+			PostQuitMessage(69);
+		} else {
+			// evitamos el cierre y escondemos si es otro objeto, para tener la posibilidad de habilitarlo luego
+			for (int i = 0; i < Elementos; i++) {
+				if (hWnd == CONTENEDOR[i].Get_hWnd()) {
+					CONTENEDOR[i].pFrame->Hide();
+				}
+			}
+			return 0;
+		}
+		break;
 	}
 	return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
 //*********************************************
-//*** CALLBACK BOTON						***
+//*** CALLBACK ESPECIAL BOTON				***
 //*********************************************
 
 LRESULT CALLBACK C_WinApi::Boton_Proc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
@@ -224,9 +260,7 @@ LRESULT CALLBACK C_WinApi::Boton_Proc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM
 	int ID_Long		 = GetDlgCtrlID((HWND)lParam);  // Identificador en cambio de color	
 	int Notificacion = HIWORD(wParam);				// Codigo de notificacion recibida (ej: click, doble click)
 	int Elementos = (int)CONTENEDOR.size();
-
 	//Test(msg, ID, ID_Long, Notificacion, Elementos, TipoObjeto::T_BUTTON, false);
-
 	switch (msg) {
 	// PRECION DE BOTON										
 	case WM_LBUTTONDOWN: {
@@ -260,6 +294,72 @@ LRESULT CALLBACK C_WinApi::Boton_Proc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM
 	}
 	return CallWindowProc(OldButtonProc, hWnd, msg, wParam, lParam);
 }
+//*********************************************
+//*** CALLBACK ESPECIAL TEXT BOX			***
+//*********************************************
+LRESULT CALLBACK C_WinApi::Text_Proc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	int ID = LOWORD(wParam);				// Identificador del control		
+	int ID_Long = GetDlgCtrlID((HWND)lParam);  // Identificador en cambio de color	
+	int Notificacion = HIWORD(wParam);				// Codigo de notificacion recibida (ej: click, doble click)
+	int Elementos = (int)CONTENEDOR.size();
+	//Test(msg, ID, ID_Long, Notificacion, Elementos, TipoObjeto::T_BUTTON, false);
+	switch (msg) {
+		// PRECION DE TECLA										
+		case WM_KEYDOWN: {
+			// Revisamos si la notificacion es (ENTER)
+			if (ID == VK_RETURN) {
+				for (int i = 0; i < Elementos; i++) {
+					// **** Envio de presion a botones				
+					if (CONTENEDOR[i].Tipo == TipoObjeto::T_TEXTBOX) {
+						// Buscamos el text que recibe el evento	
+						HWND Cont = CONTENEDOR[i].Get_hWnd();
+						if (Cont == hWnd) {
+							string tmp = CONTENEDOR[i].pTextBox->Get_Text() + "\n";
+							CONTENEDOR[i].pTextBox->Set_Text(tmp);
+							//CONTENEDOR[i].pTextBox->Event_Text_Change();
+							OutputDebugString("--press--\n");
+						}
+					}
+				}
+			} else {
+				return CallWindowProc(OldTextProc, hWnd, msg, wParam, lParam);
+			}
+		}
+		break;
+	}
+	return CallWindowProc(OldTextProc, hWnd, msg, wParam, lParam);
+}
+//*********************************************
+//*** TAB									***
+//*********************************************
+void C_WinApi::TeclaTab(MSG msg){
+	HWND hwnd_rec = msg.hwnd;
+	int Elementos = (int)CONTENEDOR.size();
+	int Elemento;
+	for (int i = 0; i < Elementos; i++) {
+		HWND hCont = CONTENEDOR[i].Get_hWnd();
+		if (hwnd_rec == hCont) {
+			Elemento = NextContenedor(i);
+			HWND hwnd_pas = CONTENEDOR[Elemento].Get_hWnd();
+			SetFocus(hwnd_pas);
+		}
+	}
+}
+
+int C_WinApi::NextContenedor(int ID_Actual) {
+	int ID_Next = ID_Actual + 1;
+	if (ID_Next == CONTENEDOR.size()) {
+		ID_Next = 0;
+	};
+	if ((CONTENEDOR[ID_Next].Tipo == TipoObjeto::T_FRAME) |
+		(CONTENEDOR[ID_Next].Tipo == TipoObjeto::T_MENU) |
+		(CONTENEDOR[ID_Next].Tipo == TipoObjeto::T_GROUPBOX) |
+		(CONTENEDOR[ID_Next].Tipo == TipoObjeto::T_LABEL) |
+		(CONTENEDOR[ID_Next].Tipo == TipoObjeto::T_SHAPE)) {
+		ID_Next = NextContenedor(ID_Next);
+	}
+	return ID_Next;
+}
 
 
 //*********************************************
@@ -269,8 +369,17 @@ int C_WinApi::Loop() {
 	MSG msg;
 	BOOL Result;
 	while ((Result = GetMessage(&msg, nullptr, 0, 0)) > 0) {
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
+		if (msg.message == WM_KEYDOWN && msg.wParam == VK_TAB) {
+			//OutputDebugString("TAB");
+			TeclaTab(msg);
+		} else {
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+		if (msg.message == WM_CHAR){
+			OutputDebugString("TECLA!!\n");
+		}
+
 	};
 	if (Result == -1) {
 		return -1;

@@ -14,6 +14,7 @@ class C_MultiLine;  /* Forward declaration de Child; */
 class C_ListBox;	/* Forward declaration de Child; */
 class C_RichText;	/* Forward declaration de Child; */
 class C_Shape;		/* Forward declaration de Child; */
+class C_Graphic;	/* Forward declaration de Child; */
 
 class Contenedor {
 private:
@@ -32,12 +33,13 @@ public:
 	void New_Object(C_ListBox& _Objeto);
 	void New_Object(C_RichText& _Objeto);
 	void New_Object(C_Shape& _Objeto);
+	void New_Object(C_Graphic& _Objeto);
+
 	//envios
 	void	Draw();		// Dibujo (para todos los elementos)					
 	void	Show();		// Show (para frame)									
 	HWND	Get_hWnd(); //Get hWnd (para todos)									
 	int		Get_ID();	// Get ID de los elementos (todos menos frame)			
-
 	
 	HBRUSH ColorEdit(WPARAM wParam);	//Edicion de color (para label transparente) - devuelve el pincel modificado
 	
@@ -53,4 +55,5 @@ public:
 	C_ListBox*		pListBox;
 	C_RichText*		pRichText;
 	C_Shape*		pShape;
+	C_Graphic*		pGraphic;
 };

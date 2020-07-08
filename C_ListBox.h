@@ -1,8 +1,10 @@
 //######################################################//
-// List Box v2.1										//
+// List Box v2.2										//
 //######################################################//
 // ULTIMA MODIFICACION DOCUMENTADA                      //
-// 21/03/2020                                           //
+// 03/07/2020                                           //
+// Set_Row												//
+// Opcion Sort en Create								//
 // Doble click											//
 // SetFont												//
 // Creacion                                             //
@@ -16,7 +18,7 @@ protected:
 	void (*Function_ChangeCell)() = Function_Empty;
 	void (*Function_DobleClick)() = Function_Empty;
 public:
-	void Create(Win_Frame* pFrame, int x, int y, int ancho, int alto);
+	void Create(Win_Frame* pFrame, int x, int y, int ancho, int alto, bool Sort=true);
 	// Propiedades			
 	int		Get_Pos_X() { return C_Objeto::Get_Pos_X(); }
 	int		Get_Pos_Y() { return C_Objeto::Get_Pos_Y(); }
@@ -28,6 +30,7 @@ public:
 	void	Set_Enable() { C_Objeto::Set_Enable(); }
 	void	Set_Disable() { C_Objeto::Set_Disable(); }
 	void	Add_Line(string Texto);
+	void	Set_Row(int Row);
 	// Asignar Eventos		
 	void	Assign_Event_ChangeCell(void(*Function)());
 	void	Assign_Event_DobleClick(void(*Function)());

@@ -1,8 +1,9 @@
 //######################################################//
-// OBJETO GLOBAL v2.2									//
+// OBJETO GLOBAL v2.3									//
 //######################################################//
 // ULTIMA MODIFICACION DOCUMENTADA                      //
-// 29/05/2020                                           //
+// 05/07/2020                                           //
+// Seteo de color de texto								//
 // Text Size & BackColor								//
 // Habilitar y deshabilitar objetos						//
 // SetFont												//
@@ -19,7 +20,7 @@
 class C_Objeto {
 protected:
 	int	 ID			 = NULL;				// Numero de elemento en Windows (distinto al hWnd)
-	unsigned __int64 Elemento;				// Numero de elemento - distinto al ID
+	unsigned __int64 Elemento = 0;			// Numero de elemento - distinto al ID
 	HWND hWnd		 = nullptr;
 	HWND *hWnd_Padre = nullptr;
 	int	 x = 0, y = 0, ancho = 0, alto = 0;	// Posicion
@@ -30,7 +31,9 @@ protected:
 	HFONT		hFont = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
 	string		Fuente		= "Arial";
 	int			Text_Size	= 14;
+	COLORREF	TextColor = RGB(0, 0, 0);
 	COLORREF	BackColor   = RGB(250, 250, 250);
+	bool		LimpiarLabel = false;
 
 	// Funcion para los objetos
 	void Contener(C_Button& Button);
@@ -42,6 +45,7 @@ protected:
 	void Contener(C_ListBox& ListBox);
 	void Contener(C_RichText& Objeto);
 	void Contener(C_Shape& Objeto);
+	void Contener(C_Graphic& Objeto);
 	//lo llama el contenedor		
 	void Draw();
 	// Funcion vacia para callback	

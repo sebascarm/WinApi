@@ -21,6 +21,9 @@ void C_MultiLine::Create(Win_Frame* pFrame, std::string Text, int x, int y, int 
 //*********************************************
 
 void C_MultiLine::Add_Line(string Texto) {
+	Cola_Texto.push(Texto + "\r\n");	//Se agrega a la cola
+}
+void C_MultiLine::Add_Text(string Texto) {
 	Cola_Texto.push(Texto);	//Se agrega a la cola
 }
 
@@ -32,10 +35,10 @@ void C_MultiLine::Th_Add_Line() {
 	bool Ejecutar = true;
 	while (Ejecutar) {
 		if (!Cola_Texto.empty()) {
-			Linea_Texto = Cola_Texto.front();	//Leer cola
-			Cola_Texto.pop();					//Limpiar cola
+			Linea_Texto = Cola_Texto.front();	//Leer cola		
+			Cola_Texto.pop();					//Limpiar cola	
 			// Procesar
-			Linea_Texto = Linea_Texto + "\r\n";
+			// Linea_Texto = Linea_Texto + "\r\n";
 			// Movemos el caret al final del texto			
 			int Long_Texto = GetWindowTextLength(hWnd);
 			SendMessage(hWnd, EM_SETSEL, Long_Texto, Long_Texto);

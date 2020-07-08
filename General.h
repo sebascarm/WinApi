@@ -10,7 +10,8 @@ enum class TipoObjeto {
 	T_GROUPBOX,
 	T_LISTBOX,
 	T_RICHTEXT,
-	T_SHAPE
+	T_SHAPE,
+	T_GRAPHIC
 };
 
 enum class W_Align {

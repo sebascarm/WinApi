@@ -11,6 +11,7 @@
 #include "C_ListBox.h"
 #include "C_RichText.h"
 #include "C_Shape.h"
+#include "C_Graphic.h"
 
 int Contenedor::Elementos = 100;
 
@@ -70,6 +71,11 @@ void Contenedor::New_Object(C_Shape& _Objeto) {
 	pShape = &_Objeto;
 	this->Tipo = TipoObjeto::T_SHAPE;
 }
+void Contenedor::New_Object(C_Graphic& _Objeto) {
+	Agregar();
+	pGraphic = &_Objeto;
+	this->Tipo = TipoObjeto::T_GRAPHIC;
+}
 
 //Show Frame													
 void Contenedor::Show() {
@@ -92,6 +98,7 @@ HWND Contenedor::Get_hWnd() {
 	case TipoObjeto::T_LISTBOX: return pListBox->hWnd; break;
 	case TipoObjeto::T_RICHTEXT: return pRichText->hWnd; break;
 	case TipoObjeto::T_SHAPE: return pShape->hWnd; break;
+	case TipoObjeto::T_GRAPHIC: return pGraphic->hWnd; break;
 	default:
 		return 0;
 	}
@@ -121,20 +128,22 @@ void Contenedor::Draw() {
 	case TipoObjeto::T_LISTBOX:	pListBox->Draw(); break;
 	case TipoObjeto::T_RICHTEXT: pRichText->Draw();	break;
 	case TipoObjeto::T_SHAPE: pShape->Draw(); break;
+	case TipoObjeto::T_GRAPHIC: pGraphic->Draw(); break;
 	}
 }
 
 int Contenedor::Get_ID() {
 	switch (Tipo) {
-	case TipoObjeto::T_BUTTON: return pButton->ID; break;
-	case TipoObjeto::T_LABEL: return pLabel->ID; break;
-	case TipoObjeto::T_GROUPBOX: pGroupBox->ID;	break;
-	case TipoObjeto::T_TEXTBOX:	pTextBox->ID; break;
-	case TipoObjeto::T_MENU: return pMenu->ID; break;
-	case TipoObjeto::T_MULTILINE: pMultiLine->ID; break;
-	case TipoObjeto::T_LISTBOX:	return pListBox->ID; break;
-	case TipoObjeto::T_RICHTEXT: pRichText->ID;	break;
-	case TipoObjeto::T_SHAPE: pShape->ID; break;
+	case TipoObjeto::T_BUTTON: return pButton->Get_ID(); break;
+	case TipoObjeto::T_LABEL: return pLabel->Get_ID(); break;
+	case TipoObjeto::T_GROUPBOX: pGroupBox->Get_ID();	break;
+	case TipoObjeto::T_TEXTBOX:	pTextBox->Get_ID(); break;
+	case TipoObjeto::T_MENU: return pMenu->Get_ID(); break;
+	case TipoObjeto::T_MULTILINE: pMultiLine->Get_ID(); break;
+	case TipoObjeto::T_LISTBOX:	return pListBox->Get_ID(); break;
+	case TipoObjeto::T_RICHTEXT: pRichText->Get_ID(); break;
+	case TipoObjeto::T_SHAPE: pShape->Get_ID(); break;
+	case TipoObjeto::T_GRAPHIC: pGraphic->Get_ID(); break;
 	default:
 		return 0;
 	}

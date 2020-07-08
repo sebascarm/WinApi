@@ -1,8 +1,10 @@
 //######################################################//
-// Label v2.0											//
+// Label v2.1											//
 //######################################################//
 // ULTIMA MODIFICACION DOCUMENTADA                      //
-// 29/05/2020                                           //
+// 05/06/2020                                           //
+// Set_TextColor										//
+// Correccion en Set_Text (limpieza						//
 // Text Size & BackColor								//
 //######################################################//
 
@@ -21,12 +23,13 @@ public:
 	int		Get_Pos_X() { return C_Objeto::Get_Pos_X(); }
 	int		Get_Pos_Y() { return C_Objeto::Get_Pos_Y(); }
 	// Metodos			
-	void	Set_Text(string Text) { C_Objeto::Set_Text(Text); }
+	void	Set_Text(string Text);
 	void    Set_Text_Size(int Text_Size) { C_Objeto::Set_Text_Size(Text_Size); };
 	void	Set_Pos(int x, int y, int ancho, int alto) { C_Objeto::Set_Pos(x, y, ancho, alto); }
 	void	Set_Enable() { C_Objeto::Set_Enable(); }
 	void	Set_Disable() { C_Objeto::Set_Disable(); }
 	// Motodo propio	
+	void	Set_TextColor(COLORREF Color);
 	void	Set_BackColor(COLORREF Color);
 };
 

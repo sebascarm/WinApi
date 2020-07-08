@@ -1,3 +1,12 @@
+//######################################################//
+// Frame v1.1											//
+//######################################################//
+// ULTIMA MODIFICACION DOCUMENTADA                      //
+// 06/07/2020                                           //
+// Incorporacion de opcion HIDE							//
+// Creacion                                             //
+//######################################################//
+
 #pragma once
 #include "WinApi.h"
 
@@ -19,6 +28,7 @@ public:
 	void		Create(Win_Api* MFrame, string Titulo, int x, int y, int ancho, int alto, bool Resize = false);
 	void		Draw();
 	void		Show();
+	void		Hide();
 	//Propiedades (Metodos)	
 	HWND&		Get_hWnd();
 	int			Get_Height();

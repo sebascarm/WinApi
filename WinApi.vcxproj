@@ -176,6 +176,7 @@
     <ClCompile Include="Contenedor.cpp" />
     <ClCompile Include="C_Button.cpp" />
     <ClCompile Include="C_Frame.cpp" />
+    <ClCompile Include="C_Graphic.cpp" />
     <ClCompile Include="C_GroupBox.cpp" />
     <ClCompile Include="C_Label.cpp" />
     <ClCompile Include="C_Shape.cpp" />
@@ -193,6 +194,7 @@
     <ClInclude Include="Contenedor.h" />
     <ClInclude Include="C_Button.h" />
     <ClInclude Include="C_Frame.h" />
+    <ClInclude Include="C_Graphic.h" />
     <ClInclude Include="C_GroupBox.h" />
     <ClInclude Include="C_Label.h" />
     <ClInclude Include="C_Shape.h" />

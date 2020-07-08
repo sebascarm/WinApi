@@ -8,6 +8,7 @@
 #include "C_ListBox.h"
 #include "C_RichText.h"
 #include "C_Shape.h"
+#include "C_Graphic.h"
 
 #include <vector>
 #include "Contenedor.h"
@@ -76,6 +77,12 @@ void C_Objeto::Contener(C_Shape& Objeto) {
 	CONTENEDOR[Elemento].New_Object(Objeto);
 	ID = CONTENEDOR[Elemento].Element_ID;
 }
+void C_Objeto::Contener(C_Graphic& Objeto) {
+	Elemento = CONTENEDOR.size();
+	CONTENEDOR.resize(Elemento + 1);
+	CONTENEDOR[Elemento].New_Object(Objeto);
+	ID = CONTENEDOR[Elemento].Element_ID;
+}
 
 // Solo el menu difiere
 void C_Objeto::Contener(C_Menu& Objeto, int Elementos) {
@@ -101,8 +108,6 @@ void C_Objeto::Draw() {
 		NULL,						/* hInstance,	/* Instancia */
 		NULL);						/* Sin datos de creación de ventana */
 	//SendMessage(hWnd, WM_SETFONT, (WPARAM)hFont, MAKELPARAM(TRUE, 0));
-	
-	
 	Set_Font(Fuente);
 }
 
@@ -132,7 +137,12 @@ void C_Objeto::Set_Font(string Fuente) {
 HBRUSH C_Objeto::ColorEdit(WPARAM& wParam) {
 	//Fondo del texto
 	HDC hdcStatic = (HDC)wParam; // or obtain the static handle in some other way
-	//SetTextColor(hdcStatic, RGB(255, 0, 0)); // text color
+	if (LimpiarLabel) {
+		SetTextColor(hdcStatic,BackColor); // text color
+		LimpiarLabel = false;
+	} else {
+		SetTextColor(hdcStatic, TextColor); // text color
+	}
 	SetBkColor(hdcStatic, BackColor);
 	return (HBRUSH)GetStockObject(NULL_BRUSH);
 
@@ -175,6 +185,7 @@ int C_Objeto::Get_Pos_Y() {
 //*** METODOS COMUNES						***
 //*********************************************
 void C_Objeto::Set_Text(string Text) {
+	this->Texto = Text;
 	SetWindowText(hWnd, (LPCSTR)Text.c_str());
 }
 
@@ -184,8 +195,10 @@ void C_Objeto::Set_Text_Size(int Text_Size){
 void C_Objeto::Set_Pos(int x, int y, int ancho, int alto) {
 	if (x == -1) { x = Get_Pos_X(); }
 	if (y == -1) { y = Get_Pos_Y(); }
-	if (ancho == -1) { ancho = this->ancho; }
-	if (alto == -1) { alto = this->alto; }
+	this->x = x; this->y = y; this->ancho = ancho; this->alto = alto;
+	//Permitimos dimensiones negativas			
+	//if (ancho == -1) { ancho = this->ancho; }	
+	//if (alto == -1) { alto = this->alto; }	
 	SetWindowPos(hWnd, 0, x, y, ancho, alto, 0);
 }
 
@@ -195,8 +208,6 @@ void C_Objeto::Set_Enable() {
 void C_Objeto::Set_Disable() {
 	EnableWindow(hWnd, FALSE);
 }
-
-
 
 
 //*********************************************
@@ -241,3 +252,6 @@ Win_Shape* New_Shape() {
 	return new C_Shape();
 }
 
+Win_Graphic* New_Graphic() {
+	return new C_Graphic();
+}

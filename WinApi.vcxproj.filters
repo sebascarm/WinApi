@@ -58,6 +58,7 @@
     <ClCompile Include="C_Shape.cpp">
       <Filter>Objetos</Filter>
     </ClCompile>
+    <ClCompile Include="C_Graphic.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinApi.h">
@@ -109,6 +110,7 @@
     <ClInclude Include="C_Shape.h">
       <Filter>Objetos</Filter>
     </ClInclude>
+    <ClInclude Include="C_Graphic.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="WinApi.rc">
