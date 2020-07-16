@@ -1,6 +1,9 @@
-# WINAPI V 4.0	
+# WINAPI V 4.1	
 
 ## ULTIMA MODIFICACION DOCUMENTADA                    
+
+## 16/07/2020 
+    - ListBox     v2.3 (Clear List)
 
 ## 08/07/2020                                          
     - Frame     v1.1 (Opcion Hide)

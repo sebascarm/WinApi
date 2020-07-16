@@ -377,7 +377,7 @@ int C_WinApi::Loop() {
 			DispatchMessage(&msg);
 		}
 		if (msg.message == WM_CHAR){
-			OutputDebugString("TECLA!!\n");
+			//OutputDebugString("TECLA!!\n");
 		}
 
 	};

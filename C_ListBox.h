@@ -1,8 +1,9 @@
 //######################################################//
-// List Box v2.2										//
+// List Box v2.3										//
 //######################################################//
 // ULTIMA MODIFICACION DOCUMENTADA                      //
-// 03/07/2020                                           //
+// 16/07/2020                                           //
+// Clear Listbox
 // Set_Row												//
 // Opcion Sort en Create								//
 // Doble click											//
@@ -31,6 +32,7 @@ public:
 	void	Set_Disable() { C_Objeto::Set_Disable(); }
 	void	Add_Line(string Texto);
 	void	Set_Row(int Row);
+	void	Clear();
 	// Asignar Eventos		
 	void	Assign_Event_ChangeCell(void(*Function)());
 	void	Assign_Event_DobleClick(void(*Function)());

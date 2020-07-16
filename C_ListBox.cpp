@@ -39,6 +39,10 @@ void C_ListBox::Add_Line(string Texto) {
 	SendMessage(hWnd, LB_ADDSTRING, 0, (LPARAM)Texto.c_str());
 }
 
+void C_ListBox::Clear() {
+	SendMessage(hWnd, LB_RESETCONTENT, 0, 0);
+}
+
 //*********************************************
 //*** ASIGNACION DE EVENTO					***
 //*********************************************

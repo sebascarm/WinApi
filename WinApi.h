@@ -1,8 +1,9 @@
 //######################################################//
-// WIN API v4.0											//
+// WIN API v4.1											//
 //######################################################//
 // ULTIMA MODIFICACION DOCUMENTADA                      //
-// 06/07/2020                                           //
+// 16/07/2020                                           //
+// ListBox (Clear) 
 // Frame (Show / Hide)									//
 // Label (Set_TextColor)								//
 // TextBox (TextID / Set_TextSize / Event Change ID)	//
@@ -159,6 +160,7 @@ public:
 	virtual void	Set_Disable() = 0;
 	virtual void	Add_Line(string Texto) = 0;
 	virtual void	Set_Row(int Row) = 0;
+	virtual void	Clear() = 0;
 	// Asignacion de evento				
 	virtual void	Assign_Event_ChangeCell(void(*Function)()) = 0;
 	virtual void	Assign_Event_DobleClick(void(*Function)()) = 0;
